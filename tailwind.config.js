@@ -12,9 +12,6 @@ module.exports = {
       center: true,
     },
     extend: {
-      backgroundImage: {
-        'hero-pattern': "url('https://img1.akspic.ru/crops/4/2/6/5/6/165624/165624-tumannost-astronomiya-tumannost_oriona-vual_tumannost-ostatok_sverhnovoj-1920x1080.jpg')",
-      },
       colors: {
         primary: '#0d6efd',
         secondary: '#6c757d',

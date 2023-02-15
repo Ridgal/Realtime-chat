@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../firebase';
 import { useNavigate, Link } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useAppDispatch } from "../../hooks/redux-hooks";
 import { setUser } from "../../redux/user/userSlice";
 
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/svg/logo.svg';
 
 
 const Registration:React.FC = () => {
 
   const style = {
     page: 'absolute top-0 left-0 w-full h-full bg-indigo-100',
-    wrapper: 'absolute top-[18%] left-[34%] rounded-xl drop-shadow-xl w-[32rem] h-[34rem] bg-white',
+    wrapper: 'absolute top-[18%] left-[34%] rounded-xl drop-shadow-xl w-[32rem] h-[38rem] bg-white',
     inner: 'flex flex-col  content-center w-full h-full p-14 md:pb-0 md:px-7 md:pt-6 sm:px-5 mb-4',
     thumb_content: 'flex justify-center',
     thumbnail: 'w-72 mb-6 sm:mb-3 sm:w-56',
@@ -34,13 +33,16 @@ const Registration:React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then(({user}) => {
         console.log(user);
         dispatch(setUser({
-            id: user.uid,
-            email: user.email,
-            token: user.refreshToken,
+          id: user.uid,
+          email: user.email,
+          token: user.refreshToken,
+          displayName: user.displayName,
+          photoUrl: user.photoURL
         }));
         navigate('/login');
       })
@@ -89,12 +91,14 @@ const Registration:React.FC = () => {
               </button>
             </div>
           </form>
-          <p className={style.excerpt}> 
-            Are you already registered?
-          <Link to="/login" className={style.link_register}>
-            Log in
-          </Link>
-          </p>
+          <div className="flex justify-center mt-4 text-grey-600 text-base">
+            Already have an account?{" "}
+            <span>
+              <Link className="text-blue-600 hover:underline" to="/login">
+                  Log In
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
     </section>

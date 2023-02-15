@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 import { Login } from '../components/Auth/Login';
 import { Registration } from '../components/Auth/Registration';
 import { Home } from '../components/Home/Home';
@@ -9,6 +9,7 @@ const App: React.FC = () => {
     <div className='container'>
       <Routes>
         <Route
+          index
           path="/"
           element={<Home />}
         />
