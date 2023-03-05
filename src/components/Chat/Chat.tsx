@@ -1,14 +1,15 @@
 import { useState } from 'react';
 
+import { getAuth } from "firebase/auth";
 import { db, auth } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, addDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import { BoxArrowRight } from "react-bootstrap-icons";
-// import { Loader } from '../Loader/Loader';
 
-const Chat = () => {
+
+const Chat:React.FC = () => {
 
   const [value, setValue] = useState('');
   const [user] = useAuthState(auth);
@@ -26,21 +27,29 @@ const Chat = () => {
     setValue('')
   };
 
+  const logout = () => {
+    const auth = getAuth();
+    auth.signOut();
+  };
+
   return (
     <div className="w-full h-full border-l">
       <section className="h-[44.5rem]">
         <div className="flex justify-between items-center h-10 px-2 bg-blue-700 rounded-tr-lg">
-          <p className="text-lg text-white font-Quicksand">Nickname</p>
-          <button className="p-1 text-white font-medium text-lg text-center">
+          <p className="text-lg text-white font-Quicksand">{user?.displayName}</p>
+          <button
+            className="p-1 text-white font-medium text-lg text-center"
+            onClick={logout}
+          >
             <BoxArrowRight />
           </button>
         </div>
         <div className="h-[42rem] p-2 bg-indigo-200 overflow-auto scroll-smooth scroll-p-2">
           {messages?.map((message) => (
-            <div key={Math.random()} className='flex justify-end items-center'>
+            <div key={Math.random()} className='flex justify-end items-center py-2 '>
               <img alt="avatar" className="w-10 h-10 rounded-full" src={message.photoURL} />
-              <div className='p-2 ml-2 bg-blue-400 rounded-lg'>
-                {message.text}
+              <div className='max-w-md p-2 ml-2 text-ellipsis overflow-x-hidden bg-blue-400 rounded-lg'>
+                <p>{message.text}</p>
               </div>
             </div>
           ))}

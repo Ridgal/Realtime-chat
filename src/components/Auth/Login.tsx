@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../firebase';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch } from '../../hooks/redux-hooks';
-import { setUser } from '../../redux/user/userSlice';
+import { login_google, login_pass } from '../../redux/auth/actions';
 
 import google from '../../assets/svg/google-icon.svg';
 import logo from '../../assets/svg/logo.svg';
-
 
 const Login:React.FC = () => {
 
@@ -35,47 +32,20 @@ const Login:React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   
+  const authWithEmail = () => {
+    dispatch(login_pass( email, password ));
+    navigate('/');
+  };
+
+  const authWithGoogle = () => {
+    dispatch(login_google());
+    navigate('/');
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-
-  const authWithGoogle = async () => { // Авторизация по паролю
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider)
-      .then(({user}) => {
-        console.log(user);
-        dispatch(setUser({
-          email: user.email,
-          id: user.uid,
-          token: user.refreshToken,
-          displayName: user.displayName,
-          photoUrl: user.photoURL
-        }));
-        navigate('/')
-        
-      }).catch((error) => {
-        console.log(error.message)
-      })
-  };
-
-  const authWithEmail = async () => { // Авторизация с помошью Google
-    const auth = getAuth();
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        console.log(user);
-        dispatch(setUser({
-          email: user.email,
-          id: user.uid,
-          token: user.refreshToken,
-          displayName: user.displayName,
-          photoUrl: user.photoURL
-        }));
-        navigate('/');
-      })
-      .catch(() => alert('Invalid user!'))
-  };
   
-
   return (
     <section className={style.page}>
       <div className={style.wrapper}>

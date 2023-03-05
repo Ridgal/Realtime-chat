@@ -1,17 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../hooks/use-auth";
+// import { useAuth } from "../../hooks/use-auth";
+import { auth } from "../../firebase";
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { Sidebar } from "../Sidebar/Sidebar";
 import { Chat } from "../Chat/Chat";
 
 const Home = () => {
-  const { isAuth } = useAuth();
-  // const style = {
-  //   layout: '',
-  //   sidebar: '',
-  //   chat: '',
-  // };
+  const [user] = useAuthState(auth);
+  console.log(user)
   
-  return isAuth ?
+  return user ?
     (
       <section className="container p-0 flex mt-14 w-full h-[48rem] bg-slate-200 rounded-xl shadow-xl">
         <div className="w-[30%] h-full">

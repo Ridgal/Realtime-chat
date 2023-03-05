@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+
 import { useAppDispatch } from "../../hooks/redux-hooks";
-import { setUser } from "../../redux/user/userSlice";
+import { registration } from '../../redux/auth/actions';
 
 import logo from '../../assets/svg/logo.svg';
 
@@ -11,7 +11,7 @@ const Registration:React.FC = () => {
 
   const style = {
     page: 'absolute top-0 left-0 w-full h-full bg-indigo-100',
-    wrapper: 'absolute top-[18%] left-[34%] rounded-xl drop-shadow-xl w-[32rem] h-[38rem] bg-white',
+    wrapper: 'absolute top-[18%] left-[34%] rounded-xl drop-shadow-xl w-[32rem] h-[32rem] bg-white',
     inner: 'flex flex-col  content-center w-full h-full p-14 md:pb-0 md:px-7 md:pt-6 sm:px-5 mb-4',
     thumb_content: 'flex justify-center',
     thumbnail: 'w-72 mb-6 sm:mb-3 sm:w-56',
@@ -33,20 +33,8 @@ const Registration:React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(({user}) => {
-        console.log(user);
-        dispatch(setUser({
-          id: user.uid,
-          email: user.email,
-          token: user.refreshToken,
-          displayName: user.displayName,
-          photoUrl: user.photoURL
-        }));
-        navigate('/login');
-      })
-      .catch(console.error)
+    dispatch(registration( email, password ));
+    navigate('/login');
   };
 
   return (
@@ -68,7 +56,7 @@ const Registration:React.FC = () => {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 name="email"
-                // required
+                required
               />
             </div>
             <div className="mt-4 sm:mt-2" />
@@ -81,7 +69,7 @@ const Registration:React.FC = () => {
                   onChange={(event) => setPassword(event.target.value)}
                   type="password" 
                   name="password" 
-                  // required
+                  required
                 />
               </div>
               <a href="/" className={style.link_pass}>Forget Password?</a>
